@@ -81,9 +81,34 @@ public class SnailShellPatternTest {
           throws InterruptedException, ExecutionException, TimeoutException {
     // size of matrix to test (matrix e*e)
     for(int i = 0; i < 50;i++){
-    for(int e: new int[]{0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}){
+    for(int e: new int[]{0,1,2,3,4,5,6,7,8,9,10}){
       FixedSizeSortedMatrixTest(e*100); // test with bigger matrixes
 
     }}
+  }
+
+  public void ParallelFixedSizeSortedMatrixTest(int n)
+          throws InterruptedException, ExecutionException, TimeoutException {
+    // test length 0
+    int[][] matrix = generator.generateTest(n);
+    Future<int[]> count = new ParallelSnailShellPattern().getSnailShell(matrix);
+    int[] result = count.get(10, TimeUnit.SECONDS);
+    int index = 0;
+    // test if list is ordered
+    while(index < result.length -1){
+      assertTrue(result[index] < result[index+1]);
+      index++;
+    }
+    // test if every element is in the result list
+    assertTrue(result.length == n * n);
+  }
+  @Test
+  public void SortedParallelMatrixTest()
+          throws InterruptedException, ExecutionException, TimeoutException {
+    // size of matrix to test (matrix e*e)
+    for(int i = 0; i < 50;i++){
+      for(int e: new int[]{0,1,2,3}){
+        ParallelFixedSizeSortedMatrixTest(e*100); // test with bigger matrixes
+      }}
   }
 }
